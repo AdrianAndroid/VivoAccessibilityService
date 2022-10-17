@@ -38,11 +38,17 @@ class MainActivity : AppCompatActivity(), Handler.Callback {
 
     lateinit var weatherTextView: TextView
     lateinit var btn: Button
+    lateinit var info: TextView
     private val timer: Timer = Timer()
     private val handler: Handler = Handler(Looper.myLooper()!!, this)
+    private var count: Int = 0
 
     @RequiresApi(Build.VERSION_CODES.N)
     private val format: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm:ss a", Locale.ENGLISH)
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private val formatToday: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+    private var todyStr = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,9 +68,11 @@ class MainActivity : AppCompatActivity(), Handler.Callback {
 
 
         weatherTextView = findViewById(R.id.weather)
+        info = findViewById(R.id.info)
         btn = findViewById(R.id.btn)
 
         timer.schedule(object : TimerTask() {
+            @RequiresApi(Build.VERSION_CODES.N)
             override fun run() {
                 initButton()
             }
@@ -72,18 +80,26 @@ class MainActivity : AppCompatActivity(), Handler.Callback {
         handler.sendEmptyMessage(0)
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun initButton() {
         OKHttpUtils.getWeather { weather: Weather ->
             Log.i("MainActivity", weather.toString())
             if (weather.results.isEmpty()) {
                 runOnUiThread { weatherTextView.text = "数据为空,可能网络未连接" }
             } else {
+                val nowStr = formatToday.format(Date(System.currentTimeMillis()))
+                if (todyStr != nowStr) {
+                    todyStr = nowStr
+                    count = 0
+                }
+                info.text = count++.toString()
+
                 val first: Weather.ResultsDTO = weather.results.first()
                 val format = String.format(
                     Locale.ENGLISH,
                     "天气:%s 温度:%s℃",
                     first.now.text,
-                    first.now.temperature
+                    first.now.temperature,
                 )
                 runOnUiThread { weatherTextView.text = format }
             }
@@ -101,9 +117,6 @@ class MainActivity : AppCompatActivity(), Handler.Callback {
         if (msg.what == 0) {
             btn.text = format.format(Date(System.currentTimeMillis()))
             handler.sendEmptyMessageDelayed(0, 1000)
-//            long sysTime = System.currentTimeMillis();//获取系统时间
-//            CharSequence sysTimeStr = DateFormat.format("hh:mm:ss", sysTime);//时间显示格式
-//            btn.setText(sysTimeStr); //更新时间
         }
         return true
     }
