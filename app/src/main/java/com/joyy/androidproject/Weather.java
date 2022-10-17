@@ -1,5 +1,6 @@
 package com.joyy.androidproject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  */
 public class Weather {
 
-    private List<ResultsDTO> results;
+    private List<ResultsDTO> results = new ArrayList<>();
 
     public List<ResultsDTO> getResults() {
         return results;
@@ -17,9 +18,17 @@ public class Weather {
         this.results = results;
     }
 
+
+    @Override
+    public String toString() {
+        return "Weather{" +
+                "results=" + results +
+                '}';
+    }
+
     public static class ResultsDTO {
         private LocationDTO location;
-        private NowDTO now;
+        private NowDTO now = new NowDTO();
         private String lastUpdate;
 
         public NowDTO getNow() {
@@ -30,6 +39,15 @@ public class Weather {
             this.now = now;
         }
 
+        @Override
+        public String toString() {
+            return "ResultsDTO{" +
+                    "location=" + location +
+                    ", now=" + now +
+                    ", lastUpdate='" + lastUpdate + '\'' +
+                    '}';
+        }
+
         public static class LocationDTO {
             private String id;
             private String name;
@@ -37,6 +55,18 @@ public class Weather {
             private String path;
             private String timezone;
             private String timezoneOffset;
+
+            @Override
+            public String toString() {
+                return "LocationDTO{" +
+                        "id='" + id + '\'' +
+                        ", name='" + name + '\'' +
+                        ", country='" + country + '\'' +
+                        ", path='" + path + '\'' +
+                        ", timezone='" + timezone + '\'' +
+                        ", timezoneOffset='" + timezoneOffset + '\'' +
+                        '}';
+            }
         }
 
         public static class NowDTO {
@@ -66,6 +96,15 @@ public class Weather {
 
             public void setTemperature(String temperature) {
                 this.temperature = temperature;
+            }
+
+            @Override
+            public String toString() {
+                return "NowDTO{" +
+                        "text='" + text + '\'' +
+                        ", code='" + code + '\'' +
+                        ", temperature='" + temperature + '\'' +
+                        '}';
             }
         }
     }

@@ -2,6 +2,7 @@ package com.joyy.androidproject
 
 import android.icu.text.SimpleDateFormat
 import android.os.*
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -73,17 +74,18 @@ class MainActivity : AppCompatActivity(), Handler.Callback {
 
     private fun initButton() {
         OKHttpUtils.getWeather { weather: Weather ->
-            val first: Weather.ResultsDTO = weather.results.first()
-//                first.now.code
-            val format = String.format(
-                Locale.ENGLISH,
-                "天气:%s 温度:%s℃",
-                first.now.text,
-                first.now.temperature
-            )
-            runOnUiThread {
-                weatherTextView.text = format
-//                btn.text = System.currentTimeMillis().toString()
+            Log.i("MainActivity", weather.toString())
+            if (weather.results.isEmpty()) {
+                runOnUiThread { weatherTextView.text = "数据为空,可能网络未连接" }
+            } else {
+                val first: Weather.ResultsDTO = weather.results.first()
+                val format = String.format(
+                    Locale.ENGLISH,
+                    "天气:%s 温度:%s℃",
+                    first.now.text,
+                    first.now.temperature
+                )
+                runOnUiThread { weatherTextView.text = format }
             }
         }
     }

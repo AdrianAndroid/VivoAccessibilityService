@@ -24,7 +24,7 @@ public class OKHttpUtils {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                weatherCallback.callback(new Weather());
             }
 
             @Override
