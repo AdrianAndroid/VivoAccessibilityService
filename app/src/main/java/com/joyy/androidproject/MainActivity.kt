@@ -2,11 +2,11 @@ package com.joyy.androidproject
 
 import android.icu.text.SimpleDateFormat
 import android.os.*
-import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -37,6 +37,7 @@ import java.util.*
 class MainActivity : AppCompatActivity(), Handler.Callback {
 
     lateinit var weatherTextView: TextView
+    lateinit var weatherImage: ImageView
     lateinit var btn: Button
     lateinit var info: TextView
     private val timer: Timer = Timer()
@@ -68,8 +69,10 @@ class MainActivity : AppCompatActivity(), Handler.Callback {
 
 
         weatherTextView = findViewById(R.id.weather)
+        weatherImage = findViewById(R.id.weatherImage)
         info = findViewById(R.id.info)
         btn = findViewById(R.id.btn)
+
 
         timer.schedule(object : TimerTask() {
             @RequiresApi(Build.VERSION_CODES.N)
@@ -80,10 +83,54 @@ class MainActivity : AppCompatActivity(), Handler.Callback {
         handler.sendEmptyMessage(0)
     }
 
+    private fun getLeftDrawable(first: Weather.ResultsDTO.NowDTO): Int {
+        return when (first.code) {
+            "0" -> R.drawable.code_0
+            "1" -> R.drawable.code_1
+            "2" -> R.drawable.code_2
+            "3" -> R.drawable.code_3
+            "4" -> R.drawable.code_4
+            "5" -> R.drawable.code_5
+            "6" -> R.drawable.code_6
+            "7" -> R.drawable.code_7
+            "8" -> R.drawable.code_8
+            "9" -> R.drawable.code_9
+            "10" -> R.drawable.code_10
+            "11" -> R.drawable.code_11
+            "12" -> R.drawable.code_12
+            "13" -> R.drawable.code_13
+            "14" -> R.drawable.code_14
+            "15" -> R.drawable.code_15
+            "16" -> R.drawable.code_16
+            "17" -> R.drawable.code_17
+            "18" -> R.drawable.code_18
+            "19" -> R.drawable.code_19
+            "20" -> R.drawable.code_20
+            "21" -> R.drawable.code_21
+            "22" -> R.drawable.code_22
+            "23" -> R.drawable.code_23
+            "24" -> R.drawable.code_24
+            "25" -> R.drawable.code_25
+            "26" -> R.drawable.code_26
+            "27" -> R.drawable.code_27
+            "28" -> R.drawable.code_28
+            "29" -> R.drawable.code_29
+            "30" -> R.drawable.code_30
+            "31" -> R.drawable.code_31
+            "32" -> R.drawable.code_32
+            "33" -> R.drawable.code_33
+            "34" -> R.drawable.code_34
+            "35" -> R.drawable.code_35
+            "36" -> R.drawable.code_36
+            "37" -> R.drawable.code_37
+            "38" -> R.drawable.code_38
+            else -> R.drawable.code_38
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.N)
     private fun initButton() {
         OKHttpUtils.getWeather { weather: Weather ->
-            Log.i("MainActivity", weather.toString())
             if (weather.results.isEmpty()) {
                 runOnUiThread { weatherTextView.text = "数据为空,可能网络未连接" }
             } else {
@@ -92,7 +139,7 @@ class MainActivity : AppCompatActivity(), Handler.Callback {
                     todyStr = nowStr
                     count = 0
                 }
-                info.text = count++.toString()
+                runOnUiThread { info.text = count++.toString() }
 
                 val first: Weather.ResultsDTO = weather.results.first()
                 val format = String.format(
@@ -101,11 +148,13 @@ class MainActivity : AppCompatActivity(), Handler.Callback {
                     first.now.text,
                     first.now.temperature,
                 )
-                runOnUiThread { weatherTextView.text = format }
+                runOnUiThread {
+                    weatherImage.setImageResource(getLeftDrawable(first.now))
+                    weatherTextView.text = format
+                }
             }
         }
     }
-
 
     override fun onDestroy() {
         super.onDestroy()

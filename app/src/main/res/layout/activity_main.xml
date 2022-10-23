@@ -14,21 +14,37 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="显示信息"
-        android:textSize="12sp"
         android:textColor="#ffffff"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/weather"
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="天气:晴 温度:19c"
-        android:textColor="#ffffff"
-        android:textSize="50dp"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/info" />
+        app:layout_constraintTop_toBottomOf="@id/info">
+
+        <ImageView
+            android:id="@+id/weatherImage"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/code_0" />
+
+        <TextView
+            android:id="@+id/weather"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="天气:晴 温度:19c"
+            android:textColor="#ffffff"
+            android:textSize="50dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/info" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn"
