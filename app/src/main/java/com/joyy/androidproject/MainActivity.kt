@@ -33,9 +33,12 @@ import java.util.*
  * https://www.jianshu.com/p/67328d9d7b65
  *
  * 知心天气
+ * 未来四天
+ * https://api.seniverse.com/v3/weather/daily.json?key=ScDaXQ_rWdohDuz2n&location=beijing&language=zh-Hans&unit=c&start=0&days=5
  */
 class MainActivity : AppCompatActivity(), Handler.Callback {
 
+    lateinit var preWeatherTextView: TextView
     lateinit var weatherTextView: TextView
     lateinit var weatherImage: ImageView
     lateinit var btn: Button
@@ -52,6 +55,7 @@ class MainActivity : AppCompatActivity(), Handler.Callback {
     private var todyStr = ""
 
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE)
         this.window.setFlags(
@@ -70,12 +74,13 @@ class MainActivity : AppCompatActivity(), Handler.Callback {
 
         weatherTextView = findViewById(R.id.weather)
         weatherImage = findViewById(R.id.weatherImage)
+        preWeatherTextView = findViewById(R.id.preWeatherTextView)
         info = findViewById(R.id.info)
         btn = findViewById(R.id.btn)
 
 
+        initButton();
         timer.schedule(object : TimerTask() {
-            @RequiresApi(Build.VERSION_CODES.N)
             override fun run() {
                 initButton()
             }
@@ -152,6 +157,28 @@ class MainActivity : AppCompatActivity(), Handler.Callback {
                     weatherImage.setImageResource(getLeftDrawable(first.now))
                     weatherTextView.text = format
                 }
+            }
+        }
+
+        OKHttpUtils.getPreWeather { preWeaterh ->
+            if (preWeaterh.results.isEmpty()) {
+                runOnUiThread { preWeatherTextView.text = "数据为空,可能网络未连接" }
+            } else {
+                val first: PreWeather.ResultsDTO = preWeaterh.results.first()
+                val stringBuilder = StringBuilder()
+                first.daily.forEach { dailyDTO ->
+                    val format = String.format(
+                        Locale.ENGLISH,
+                        "%s,[%s℃,%s℃]日:%s,夜:%s",
+                        dailyDTO.date,
+                        dailyDTO.low,
+                        dailyDTO.high,
+                        dailyDTO.textDay,
+                        dailyDTO.textNight
+                    )
+                    stringBuilder.append(format).append("\n")
+                }
+                runOnUiThread { preWeatherTextView.text = stringBuilder.toString() }
             }
         }
     }

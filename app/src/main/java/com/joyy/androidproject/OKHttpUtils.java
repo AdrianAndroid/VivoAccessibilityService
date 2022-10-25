@@ -40,8 +40,39 @@ public class OKHttpUtils {
         });
     }
 
+    public static void getPreWeather(PreWeatherCallback weatherCallback) {
+        String url = "https://api.seniverse.com/v3/weather/daily.json?key=ScDaXQ_rWdohDuz2n&location=beijing&language=zh-Hans&unit=c&start=0&days=5";
+        //创建一个Request
+        Request request = new Request.Builder()
+                .get()
+                .url(url)
+                .build();
+        //通过client发起请求
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                weatherCallback.callback(new PreWeather());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    // String str = response.body().string();
+                    Gson gson = new Gson();
+                    final PreWeather weather = gson.fromJson(response.body().string(), PreWeather.class);
+                    System.out.println(weather);
+                    weatherCallback.callback(weather);
+                }
+            }
+        });
+    }
+
     interface WeatherCallback {
         void callback(Weather weather);
+    }
+
+    interface PreWeatherCallback {
+        void callback(PreWeather preWeather);
     }
 
 }
