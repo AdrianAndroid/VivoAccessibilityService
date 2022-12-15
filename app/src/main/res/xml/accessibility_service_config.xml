@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:packageNames="com.android.packageinstaller"
+    android:accessibilityEventTypes="typeAllMask"
+    android:accessibilityFeedbackType="feedbackSpoken"
+    android:canRetrieveWindowContent="true"
+    android:description="@string/accessibility_service_description"
+    android:notificationTimeout="1000" />
+
+    <!--
+    android:packageNames服务要监控的应用的包名，如果有多个则用逗号连起来，空着表示监听所有的应用。
+    android:accessibilityEventTypes服务要监控的事件类型，如通知、窗口改变、点击、焦点改变等等，如果有多个可以用 | 连起来，typeAllMask代表所有类型。
+    android:accessibilityFeedbackType服务反馈的方式，如语音、震动等等，feedbackAllMask代表所有类型。
+    android:notificationTimeout 接受事件的时间间隔（毫秒）
+    android:canRetrieveWindowContent 服务能否获取窗口里面的内容
+    这些配置除了在xml里面写之外，还可以在代码中建立一个AccessibilityServiceInfo对象，然后通过setServiceInfo()来设置。
+    -->
